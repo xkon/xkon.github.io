@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>PHP的一些配置可能导致的安全隐患 | xkon&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="php配置文件PHP的配置选项可参考官网的PHP运行时配置，配置文件有php.ini，httpd.conf，.htaccess等。最常见也是正宗的PHP的配置文件为php.ini，一般在php安装目录下，也可以通过phpinfo()和get_cfg_var()查看配置文件的路径。在Debian下PHP跟Apache搭配时，配置文件为/etc/php5/apache2/php.ini。
+php.in">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP的一些配置可能导致的安全隐患">
+<meta property="og:url" content="http://xkon.githb.io/2015/07/02/php配置/index.html">
+<meta property="og:site_name" content="xkon's Blog">
+<meta property="og:description" content="php配置文件PHP的配置选项可参考官网的PHP运行时配置，配置文件有php.ini，httpd.conf，.htaccess等。最常见也是正宗的PHP的配置文件为php.ini，一般在php安装目录下，也可以通过phpinfo()和get_cfg_var()查看配置文件的路径。在Debian下PHP跟Apache搭配时，配置文件为/etc/php5/apache2/php.ini。
+php.in">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/expose_php.png">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/getshell2.png">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/B_uLEABQDH397.jpg">
+<meta property="og:updated_time" content="2015-10-14T03:53:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP的一些配置可能导致的安全隐患">
+<meta name="twitter:description" content="php配置文件PHP的配置选项可参考官网的PHP运行时配置，配置文件有php.ini，httpd.conf，.htaccess等。最常见也是正宗的PHP的配置文件为php.ini，一般在php安装目录下，也可以通过phpinfo()和get_cfg_var()查看配置文件的路径。在Debian下PHP跟Apache搭配时，配置文件为/etc/php5/apache2/php.ini。
+php.in">
+  
+    <link rel="alternative" href="/atom.xml" title="xkon&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">xkon&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xkon.githb.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-php配置" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/07/02/php配置/" class="article-date">
+  <time datetime="2015-07-02T03:54:00.000Z" itemprop="datePublished">2015-07-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PHP的一些配置可能导致的安全隐患
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="php配置文件">php配置文件</h2><p>PHP的配置选项可参考<a href="http://php.net/manual/zh/configuration.php" target="_blank" rel="external">官网的PHP运行时配置</a>，配置文件有<code>php.ini</code>，<code>httpd.conf</code>，<code>.htaccess</code>等。最常见也是正宗的PHP的配置文件为<code>php.ini</code>，一般在php安装目录下，也可以通过<code>phpinfo()</code>和<code>get_cfg_var()</code>查看配置文件的路径。在Debian下PHP跟Apache搭配时，配置文件为<code>/etc/php5/apache2/php.ini</code>。</p>
+<p>php.ini设置的选项是对Web服务器所有脚本生效。httpd.conf其实是apache的配置文件，但是里面的选项也可以影响到PHP的设置，并且其设置的选项是对该定义的目录下所有脚本生效。.htaccess文件(或者”分布式配置文件”)提供了针对每个目录改变配置的方法，即在一个特定的目录中放置一个包含指令的文件，其中的指令作用于此目录及其所有子目录。要使.htaccess的配置能生效需要在httpd.conf文件中启用<code>AllowOverride</code>和<code>载入rewrite模块</code>。</p>
+<p>PHP的配置是很灵活的，一不小心开启了一些不必要的php配置选项可能会带来敏感信息泄漏、SQL注射、远程包含等安全问题。规范的安全配置可保障最基本的安全环境。</p>
+<a id="more"></a>
+<h2 id="php-ini_配置文件中的选项">php.ini 配置文件中的选项</h2><p>下面介绍一些php.ini文件中易造成漏洞的选项。</p>
+<ul>
+<li><p>Expose_php = On    泄露php的版本信息</p>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/expose_php.png" alt="PHP版本信息泄露"></p>
+<p>由于各个版本的一些特性，会造成一些漏洞只在某些PHP的版本中有效，所以当得到PHP的版本信息时，如果版本过高，就知道某些技巧就不适用了。    如0字节截断已经在php5.3.4中修复了，故高于5.4.3的版本中都不存在0字节截断问题。</p>
+</li>
+<li><p>一些调试选项，造成信息泄露</p>
+<ul>
+<li>display_errors=On</li>
+<li>error_reporting = E_ALL&amp; ~E_NOTICE</li>
+<li>display_startup_errors =On</li>
+</ul>
+<p>在开发时一般会打开调试选项，但在正式上线时必须要将这些选项禁用了以免造成信息的泄露。</p>
+</li>
+<li><p>register_globals = on 造成变量覆盖等</p>
+<p>register_globals从PHP4.2.0开始有On默认改为Off，并从PHP5.3起废    弃并将自 PHP 5.4.0 起移除。<br>PHP在进程启动时，会根据<code>register_globals</code>的设置，判断是否将<code>$_GET</code>、    <code>$_POST</code>、<code>$_COOKIE</code>、<code>$_ENV、$_SERVER</code>、<code>$REQUEST</code>等数组变量里的内容自动注册为全局变量。<br>如下面代码：</p>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="comment">// 当用户合法的时候，赋值 $authorized = true</span></span><br><span class="line"><span class="keyword">if</span> (authenticated_user()) &#123;</span><br><span class="line">    <span class="variable">$authorized </span>= <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 由于并没有事先把 $authorized 初始化为 false，</span></span><br><span class="line"><span class="comment">// 当 register_globals 打开时，可能通过GET auth.php?authorized=1 来定义该变量值</span></span><br><span class="line"><span class="comment">// 所以任何人都可以绕过身份验证</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$authorized</span>) &#123;</span><br><span class="line">    <span class="keyword">include</span> <span class="string">"/highly/sensitive/data.php"</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>Allow_url_fopen = On</code> ，<code>Allow_url_include = On</code> 可能造成任意代码执行激活了 URL 形式的 fopen 封装协议使得可以访问 URL 对象例如文件，配合文件包含漏洞，可能造成任意代码执行，并直接getshell。<br>当使用了远程文件打开，并且又包含文件，并且文件又可以有用户控制的话，    则会有严重的安全隐患，如下测试。</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="variable">$lib </span>= <span class="variable">$_GET</span>[‘dir’];</span><br><span class="line"><span class="keyword">include</span> <span class="string">"$lib/config.php"</span>;</span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/getshell2.png" alt="远程文件包含getshell"></p>
+<p>  直接getshell!</p>
+<ul>
+<li><p><code>magic_quotes_gpc = on</code> 能在一定程度上防止SQL注入</p>
+<p><code>magic-quotes-gpc</code>为 GPC (Get/Post/Cookie) 操作设置 <code>magic_quotes</code> 状态。 当 magic_quotes 为 on，所有的 ‘ (单引号)、” (双引号)、\（反斜    杠）和 NUL’s 被一个反斜杠自动转义。自PHP 5.3.0 起这个配置特性废弃并将自 PHP 5.4.0 起移除。</p>
+<p>DVWA中的代码示例如下，没有对输入进行任何的过滤，造成了典型的SQL注入，但是当打开了魔术引号可以在一定程度上防止SQL注入。</p>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span>     </span><br><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">'Submit'</span>]))&#123; </span><br><span class="line">    <span class="comment">// Retrieve data </span></span><br><span class="line">    <span class="variable">$id </span>= <span class="variable">$_GET</span>[<span class="string">'id'</span>]; </span><br><span class="line">    <span class="variable">$getid </span>= <span class="string">"SELECT first_name, last_name FROM users WHERE user_id = '$id'"</span>; </span><br><span class="line">    <span class="variable">$result </span>= mysql_query(<span class="variable">$getid</span>) <span class="keyword">or</span> <span class="keyword">die</span>(<span class="string">'&lt;pre&gt;'</span> . mysql_error() . <span class="string">'&lt;/pre&gt;'</span> );</span><br><span class="line">    <span class="variable">$num </span>= mysql_numrows(<span class="variable">$result</span>); </span><br><span class="line"></span><br><span class="line">    <span class="variable">$i </span>= <span class="number">0</span>; </span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="variable">$i </span>&lt; <span class="variable">$num</span>) &#123; </span><br><span class="line"></span><br><span class="line">        <span class="variable">$first </span>= mysql_result(<span class="variable">$result</span>,<span class="variable">$i</span>,<span class="string">"first_name"</span>); </span><br><span class="line">        <span class="variable">$last </span>= mysql_result(<span class="variable">$result</span>,<span class="variable">$i</span>,<span class="string">"last_name"</span>); </span><br><span class="line">         </span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;pre&gt;'</span>; </span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'ID: '</span> . <span class="variable">$id </span>. <span class="string">'&lt;br&gt;First name: '</span> . <span class="variable">$first </span>. <span class="string">'&lt;br&gt;Surname: '</span> . <span class="variable">$last</span>; </span><br><span class="line">        <span class="keyword">echo</span> <span class="string">'&lt;/pre&gt;'</span>; </span><br><span class="line"></span><br><span class="line">        <span class="variable">$i</span>++; </span><br><span class="line">    &#125; </span><br><span class="line">&#125; </span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="-htaccess突破文件上传">.htaccess突破文件上传</h2><p>.htaccess文件提供了针对每个目录改变配置的方法，所以有利用.htaccess文件来突破文件上传拿shell的。这里利用时有一个条件就是上传的文件名得不变。</p>
+<p>利用过程为</p>
+<ol>
+<li>上传.htaccess文件，其中文件中填入<code>AddType application/x-httpd-php  .jpg</code></li>
+<li>上传图片马</li>
+</ol>
+<p>原理就是利用.htaccess文件控制解析 jpg文件为php程序。</p>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/B_uLEABQDH397.jpg" alt=""></p>
+<h2 id="参考">参考</h2><p>《白帽子讲Web安全》以及网络上的各篇文章，太多了就不一一列举，统一感谢之。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xkon.githb.io/2015/07/02/php配置/" data-id="cifqa366500101lmdd3yrq29t" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php/">php</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/07/04/PHP多版本切换/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          PHP多版本切换
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/05/31/rsync信息泄露自动化扫描/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">rsync信息泄露自动化扫描</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JMXInvokerServlet/">JMXInvokerServlet</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kali/">Kali</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Reverse-Shell/">Reverse Shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jboss/">jboss</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitm/">mitm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sniff/">sniff</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wifi/">wifi</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内网/">内网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/常见漏洞/">常见漏洞</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/扫描/">扫描</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/端口与服务/">端口与服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/验证码/">验证码</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JMXInvokerServlet/" style="font-size: 10px;">JMXInvokerServlet</a> <a href="/tags/Kali/" style="font-size: 10px;">Kali</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Reverse-Shell/" style="font-size: 10px;">Reverse Shell</a> <a href="/tags/jboss/" style="font-size: 10px;">jboss</a> <a href="/tags/mitm/" style="font-size: 10px;">mitm</a> <a href="/tags/php/" style="font-size: 20px;">php</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/sniff/" style="font-size: 10px;">sniff</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/wifi/" style="font-size: 10px;">wifi</a> <a href="/tags/内网/" style="font-size: 10px;">内网</a> <a href="/tags/常见漏洞/" style="font-size: 10px;">常见漏洞</a> <a href="/tags/扫描/" style="font-size: 10px;">扫描</a> <a href="/tags/端口与服务/" style="font-size: 10px;">端口与服务</a> <a href="/tags/验证码/" style="font-size: 10px;">验证码</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/09/15/常见端口服务及常见漏洞/">常见端口服务及对应漏洞</a>
+          </li>
+        
+          <li>
+            <a href="/2015/09/10/Jboss-JMXInvokerServlet探测脚本/">多线程批量Jboss_JMXInvokerServlet探测脚本</a>
+          </li>
+        
+          <li>
+            <a href="/2015/09/04/Linux建立反向shell的几种方式/">Linux建立反向shell的几种方式</a>
+          </li>
+        
+          <li>
+            <a href="/2015/07/04/PHP多版本切换/">PHP多版本切换</a>
+          </li>
+        
+          <li>
+            <a href="/2015/07/02/php配置/">PHP的一些配置可能导致的安全隐患</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 xkon<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

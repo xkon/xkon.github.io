@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>识别简单的验证码 | xkon&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="##0x00 前戏
+第一篇文章记录一下自己写的一个小脚本，关于识别验证码与Python登陆网站并抓取信息。重头戏放在了验证码识别上，所以题目就是识别简单的验证码了。
+##0x01 认识验证码
+全自动区分计算机和人类的公开图灵测试（英语：Completely Automated Public Turing test to tell Computers and Humans Apart，简称CAPTC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="识别简单的验证码">
+<meta property="og:url" content="http://xkon.githb.io/2015/04/06/识别简单的验证码/index.html">
+<meta property="og:site_name" content="xkon's Blog">
+<meta property="og:description" content="##0x00 前戏
+第一篇文章记录一下自己写的一个小脚本，关于识别验证码与Python登陆网站并抓取信息。重头戏放在了验证码识别上，所以题目就是识别简单的验证码了。
+##0x01 认识验证码
+全自动区分计算机和人类的公开图灵测试（英语：Completely Automated Public Turing test to tell Computers and Humans Apart，简称CAPTC">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/vcode.png">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/example.png">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/failocr.png">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/hello.png">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/Bled Castle, Slovenia.jpg">
+<meta property="og:updated_time" content="2015-10-14T03:53:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="识别简单的验证码">
+<meta name="twitter:description" content="##0x00 前戏
+第一篇文章记录一下自己写的一个小脚本，关于识别验证码与Python登陆网站并抓取信息。重头戏放在了验证码识别上，所以题目就是识别简单的验证码了。
+##0x01 认识验证码
+全自动区分计算机和人类的公开图灵测试（英语：Completely Automated Public Turing test to tell Computers and Humans Apart，简称CAPTC">
+  
+    <link rel="alternative" href="/atom.xml" title="xkon&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">xkon&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xkon.githb.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-识别简单的验证码" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/04/06/识别简单的验证码/" class="article-date">
+  <time datetime="2015-04-06T04:35:15.000Z" itemprop="datePublished">2015-04-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      识别简单的验证码
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##0x00 前戏</p>
+<p>第一篇文章记录一下自己写的一个小脚本，关于识别验证码与Python登陆网站并抓取信息。重头戏放在了验证码识别上，所以题目就是识别简单的验证码了。</p>
+<p>##0x01 认识验证码</p>
+<p>全自动区分计算机和人类的公开图灵测试（英语：Completely Automated Public Turing test to tell Computers and Humans Apart，简称CAPTCHA），俗称验证码，是一种区分用户是计算机和人的公共全自动程序。<a href="http://zh.wikipedia.org/wiki/%E9%AA%8C%E8%AF%81%E7%A0%81" target="_blank" rel="external">来源：维基百科</a>。设计验证码就是为了抵御机器的攻击，但是很多的验证码是形同虚设，像我们学校校园网用的深澜的系统，在查流量登录时的验证码，就很容易被机器识别。<img src="http://7xi3ed.com1.z0.glb.clouddn.com/vcode.png" alt="深澜验证码"><br><a id="more"></a></p>
+<p>##0x02 用python识别验证码</p>
+<p>网上有很多用Python来做验证码识别的文章，这里我采用了最简单的一个方法，但也会有一定的识别失败的几率。<br>用到两个库<code>PIL</code>和<code>pytesseract</code>。其中<code>pytesseract</code>还依赖于<code>tesseract-ocr</code>,下载链接在这<a href="https://code.google.com/p/tesseract-ocr/downloads/list" target="_blank" rel="external">https://code.google.com/p/tesseract-ocr/downloads/list</a>，最新版是3.02.02，下载exe文件安装即可。好像要梯子……</p>
+<p>两个Python库都可以通过<code>pip</code>安装</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip <span class="keyword">install</span> pillow</span><br><span class="line">pip <span class="keyword">install</span> pytesseract</span><br></pre></td></tr></table></figure>
+<p>好了，以上工作做好后，一切就就绪了，接下来直接上代码。</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> sys,pytesseract</span><br><span class="line"></span><br><span class="line">im=Image.open(sys.argv[<span class="number">1</span>])</span><br><span class="line">vcode=pytesseract.image_to_string(im)</span><br><span class="line"><span class="keyword">print</span> vcode</span><br></pre></td></tr></table></figure>
+<p>通过上面的五行代码就可以轻松识别一些简单的验证码，其实真正的代码只有两行，可见<code>pytesseract</code>封装做的很好。效果图</p>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/example.png" alt="测试"></p>
+<p>上面是利用了<code>tesseract-ocr</code>的强大的图片字符识别功能，但是识别出错的几率也是比较大的。像下图这样，<code>2613</code>被识别成了<code>26i3</code>，像这样的识别错误，我们可以通过重新获取验证码来提高识别几率，下面将会有一个例子。<br><img src="http://7xi3ed.com1.z0.glb.clouddn.com/failocr.png" alt="识别失败"></p>
+<h2 id="0x03_一个小案例">0x03 一个小案例</h2><p>上面说了深澜的验证码形同虚设，那我就拿他开刀，做了一个识别验证码并成功登陆获取流量信息的小脚本。此处只是做了方便自己查询剩余流量的功能，如果别人拿这小片代码去干什么违法的勾当，像暴库，撞库，之类的，完全跟我无关呐。代码新手，大牛勿喷啊，好像也没法喷，还没有开启评论功能呢(⊙o⊙)</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding=utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="string">'''</span><br><span class="line">查看自己的校园网流量使用情况,会有一定的几率验证码识别失败...</span><br><span class="line">                by xk0n</span><br><span class="line">'''</span></span><br><span class="line"></span><br><span class="line">banner = <span class="string">r'''</span><br><span class="line">        __   _______          </span><br><span class="line">___  __|  | _\   _  \   ____  </span><br><span class="line">\  \/  /  |/ /  /_\  \ /    \ </span><br><span class="line"> &gt;    &lt;|    &lt;\  \_/   \   |  \</span><br><span class="line">/__/\_ \__|_ \\_____  /___|  /</span><br><span class="line">      \/    \/      \/     \/</span><br><span class="line">      '''</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> pytesseract</span><br><span class="line"></span><br><span class="line">url = <span class="string">"http://zyzfw.xidian.edu.cn:8800/"</span></span><br><span class="line">vcode_path = <span class="string">"http://zyzfw.xidian.edu.cn:8800/include/function/chekcode.php?43"</span></span><br><span class="line">user = <span class="string">''</span></span><br><span class="line">passwd = <span class="string">''</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">down_png</span><span class="params">(req, img_path)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'check.png'</span>, <span class="string">'wb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        img_stream = req.get(img_path, stream=<span class="keyword">True</span>)</span><br><span class="line">        <span class="keyword">for</span> chunk <span class="keyword">in</span> img_stream.iter_content(chunk_size=<span class="number">1024</span>):</span><br><span class="line">            <span class="keyword">if</span> chunk:  <span class="comment"># filter out keep-alive new chunks</span></span><br><span class="line">                f.write(chunk)</span><br><span class="line">                f.flush()</span><br><span class="line">        f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(req, code, user, passwd)</span>:</span></span><br><span class="line">    payload = &#123;<span class="string">'ts'</span>: <span class="string">'login'</span>, <span class="string">'chekcode'</span>: code,</span><br><span class="line">               <span class="string">'username'</span>: user, <span class="string">'password'</span>: passwd&#125;</span><br><span class="line">    r2 = req.post(url + <span class="string">'/index.php?action=login'</span>, data=payload)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[*] Return code is '</span>+r2.text</span><br><span class="line">    <span class="keyword">if</span> r2.text == <span class="string">'101'</span>:</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'[*] login success!'</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">True</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">False</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取验证码</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_vcode</span><span class="params">(req, vcode_path)</span>:</span></span><br><span class="line">    vcode = <span class="string">''</span></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        <span class="keyword">if</span> re.match(<span class="string">'\d&#123;4&#125;'</span>, vcode) <span class="keyword">is</span> <span class="keyword">None</span>:</span><br><span class="line">            down_png(req, vcode_path)</span><br><span class="line"></span><br><span class="line">            im = Image.open(<span class="string">'check.png'</span>)</span><br><span class="line">            vcode = pytesseract.image_to_string(im)</span><br><span class="line">            vcode = vcode[:<span class="number">4</span>]</span><br><span class="line"></span><br><span class="line">            vcode_path += <span class="string">'?'</span> + <span class="string">''</span>.join(str(time.time()).split(<span class="string">'.'</span>))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">print</span> <span class="string">'[*] verification code is '</span> + vcode</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">return</span> vcode</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印banner</span></span><br><span class="line"><span class="keyword">print</span> banner</span><br><span class="line">req = requests.session()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 识别验证码</span></span><br><span class="line">vcode = get_vcode(req, vcode_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 登陆</span></span><br><span class="line"><span class="keyword">if</span> login(req, vcode, user, passwd):</span><br><span class="line">    <span class="comment"># 抓主页内容</span></span><br><span class="line">    r = req.get(url)</span><br><span class="line">    soup = BeautifulSoup(r.text)</span><br><span class="line">    results = soup.find_all(attrs=&#123;<span class="string">'class'</span>: <span class="string">"title td_content"</span>&#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># print req.cookies</span></span><br><span class="line">    <span class="keyword">print</span> results[-<span class="number">2</span>].text</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[*] Please try again!'</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'[*] Your cookie is '</span>,req.cookies</span><br></pre></td></tr></table></figure>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/hello.png" alt="效果图"></p>
+<p>如果你想用这个小脚本来简化查流量的工作，如果你的流量管理系统也是深澜，那么你只要改了代码中的<code>user</code>和<code>passwd</code>为自己的信息，然后<code>url</code>为流量查询主页和<code>vcode_path</code>为验证码图片的路径，这个脚本就可以为你工作了！</p>
+<p>##0x04 真正的验证码识别</p>
+<p>上面的东西只能说是一些小tricks，都还不能算入了验证码识别的门，我也仅仅是抛砖引玉。其实真正的要破解各种验证码是一件很高深的事情，其中涉及了图像处理，模式识别，机器视觉，人工智能等等高深莫测的概念。作为分享，也为了自己以后在这方面能更深入，我在这里记录一些参考资料</p>
+<p><a href="http://huaidan.org/archives/2085.html" target="_blank" rel="external">如何识别高级的验证码</a><br><a href="http://caca.zoy.org/wiki/PWNtcha" target="_blank" rel="external">PWNtcha</a><br><a href="http://linux.im/2015/03/17/12306-new-captcha.html" target="_blank" rel="external">12306 售票网站新版验证码识别对抗</a><br><a href="http://www.ruanyifeng.com/blog/2011/07/principle_of_similar_image_search.html" target="_blank" rel="external">相似图片搜索的原理</a></p>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/Bled Castle, Slovenia.jpg" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xkon.githb.io/2015/04/06/识别简单的验证码/" data-id="cifqa365m00071lmdsgc5gl6d" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/验证码/">验证码</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/04/15/攻击无线WiFi/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          攻击无线WiFi
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/04/06/hello world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello world</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JMXInvokerServlet/">JMXInvokerServlet</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kali/">Kali</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Reverse-Shell/">Reverse Shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jboss/">jboss</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitm/">mitm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sniff/">sniff</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wifi/">wifi</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内网/">内网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/常见漏洞/">常见漏洞</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/扫描/">扫描</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/端口与服务/">端口与服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/验证码/">验证码</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JMXInvokerServlet/" style="font-size: 10px;">JMXInvokerServlet</a> <a href="/tags/Kali/" style="font-size: 10px;">Kali</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Reverse-Shell/" style="font-size: 10px;">Reverse Shell</a> <a href="/tags/jboss/" style="font-size: 10px;">jboss</a> <a href="/tags/mitm/" style="font-size: 10px;">mitm</a> <a href="/tags/php/" style="font-size: 20px;">php</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/sniff/" style="font-size: 10px;">sniff</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/wifi/" style="font-size: 10px;">wifi</a> <a href="/tags/内网/" style="font-size: 10px;">内网</a> <a href="/tags/常见漏洞/" style="font-size: 10px;">常见漏洞</a> <a href="/tags/扫描/" style="font-size: 10px;">扫描</a> <a href="/tags/端口与服务/" style="font-size: 10px;">端口与服务</a> <a href="/tags/验证码/" style="font-size: 10px;">验证码</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/09/15/常见端口服务及常见漏洞/">常见端口服务及对应漏洞</a>
+          </li>
+        
+          <li>
+            <a href="/2015/09/10/Jboss-JMXInvokerServlet探测脚本/">多线程批量Jboss_JMXInvokerServlet探测脚本</a>
+          </li>
+        
+          <li>
+            <a href="/2015/09/04/Linux建立反向shell的几种方式/">Linux建立反向shell的几种方式</a>
+          </li>
+        
+          <li>
+            <a href="/2015/07/04/PHP多版本切换/">PHP多版本切换</a>
+          </li>
+        
+          <li>
+            <a href="/2015/07/02/php配置/">PHP的一些配置可能导致的安全隐患</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 xkon<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>

